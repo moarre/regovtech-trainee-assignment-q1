@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/SignUp';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
@@ -13,4 +14,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
