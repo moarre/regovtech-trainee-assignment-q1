@@ -1,16 +1,42 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import { CardGroup } from 'react-bootstrap';
 import Image from "react-bootstrap/Image";
 
 import profileImage from '../assets/profileimage.jpg';
 
 function Profile() {
+
+    const [userData, setUserData] = useState({ name: '', email: '' });
+
+    const navigate = useNavigate();
+
+    const onLogout = () => {
+        localStorage.removeItem('loggedUser');
+        navigate('/');
+    };
+
+    useEffect(() => {
+        // Retrieve user data from local storage
+        const loggedUser = JSON.parse(localStorage.getItem('loggedUser'));
+
+        if (loggedUser) {
+            setUserData({ name: loggedUser.name, email: loggedUser.email });
+        }
+    }, []);
+
     return (
         <>
             <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
                 <Card>
                     <Card.Body>
-                        <Card.Title className="text-center mt-2 mb-4"><h1>Profile Page</h1></Card.Title>
+                        <Card.Title className="text-center mt-2 mb-4">
+                            <h1>Profile Page</h1>
+                            <Button variant="primary" className="position-absolute top-0 end-0 mt-4 me-3" onClick={onLogout}>Logout</Button>
+                        </Card.Title>
                         <CardGroup>
                             <Card style={{ height: '80vh', width: '50vh' }}>
                                 <Card.Body style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="text-center mt-2 mb-4">
@@ -23,13 +49,13 @@ function Profile() {
                                     <div className='mb-4 mt-2'>
                                         <Card.Text><b>Name:</b></Card.Text>
                                         <div className='d-grid gap-3'>
-                                            <Card.Subtitle>Ariff</Card.Subtitle>
+                                            <Card.Subtitle>{userData.name}</Card.Subtitle>
                                         </div>
                                     </div>
                                     <div className='mb-4 mt-2'>
                                         <Card.Text><b>Email:</b></Card.Text>
                                         <div className='d-grid gap-3'>
-                                            <Card.Subtitle>ariffazlan16@gmail.com</Card.Subtitle>
+                                            <Card.Subtitle>{userData.email}</Card.Subtitle>
                                         </div>
                                     </div>
                                     <div className='mb-4 mt-2'>
