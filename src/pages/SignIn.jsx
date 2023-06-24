@@ -2,10 +2,44 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function SignIn() {
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-    function onSubmit() {}
-    function onChange() {}
+function SignIn() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+    const { email, password } = formData;
+
+    const navigate = useNavigate();
+
+    const onChange = (e) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            [e.target.id]: e.target.value,
+        }));
+    };
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const matchedUser = users.find((user) => user.email === email && user.password === password);
+
+            if (matchedUser) {
+                // Save logged-in user in localStorage
+                localStorage.setItem('loggedUser', JSON.stringify(matchedUser));
+                navigate('/profile');
+            } else {
+                throw new Error('Invalid credentials');
+            }
+        } catch (error) {
+            toast.error('Bad User Credentials');
+        }
+    };
 
     return (
         <>
@@ -24,21 +58,21 @@ function SignIn() {
                                 type="email"
                                 id="email"
                                 placeholder="Email"
-                                
+                                value={email}
                                 onChange={onChange}
                             />
                             <Form.Control
                                 type="password"
                                 id="password"
                                 placeholder="Password"
-                                
+                                value={password}
                                 onChange={onChange}
                             />
                             <br />
                             <Button variant="primary" type="submit">
                                 Sign In
                             </Button>{' '}
-                            {/* <Link className="text-center mb-2" to="/sign-in">Already have an account? Sign in</Link> */}
+                            <Link className="text-center mb-2" to="/sign-up">Dont have an account? Sign Up</Link>
                         </Form>
                     </div>
                 </Card>
